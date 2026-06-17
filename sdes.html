@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projet — Elodie Hu</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #111111;
+      --gray-client: #D9D9D9;
+      --white: #ffffff;
+      --font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --nav-h: 80px;
+      --pad: 48px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--white);
+      color: var(--black);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ══════════════════════════════════════
+       NAVBAR — identique à index.html
+    ══════════════════════════════════════ */
+    nav {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 32px 48px;
+      border: none;
+      box-shadow: none;
+    }
+
+    .nav-logo {
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      color: var(--black);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 58px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      color: var(--black);
+      text-transform: uppercase;
+      position: relative;
+      padding-bottom: 2px;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--black);
+      transition: width 0.25s ease;
+    }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--black);
+      transition: all 0.3s ease;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--white);
+      z-index: 99;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--font);
+      font-size: 32px;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--black);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ══════════════════════════════════════
+       LAYOUT PRINCIPAL
+       Colonne gauche sticky + colonne droite médias
+    ══════════════════════════════════════ */
+
+    .project-wrapper {
+      /* commence sous la navbar */
+      padding-top: var(--nav-h);
+      padding-left: var(--pad);
+      padding-right: var(--pad);
+    }
+
+    /* Séparateur haut — ligne fine comme sur brand-identity */
+    .project-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--black);
+      margin-bottom: 48px;
+    }
+
+    /* Zone à deux colonnes */
+    .project-body {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: 0 48px;
+      /* La hauteur est définie par la colonne médias */
+      align-items: start;
+    }
+
+    /* ── COLONNE GAUCHE — sticky ── */
+    .project-info {
+      position: sticky;
+      /* colle juste sous la navbar */
+      top: var(--nav-h);
+      /* s'arrête de coller quand la zone média se termine :
+         géré en JS en ajoutant .is-bottom */
+      padding-bottom: 48px;
+    }
+
+    .project-category {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray-client);
+      margin-bottom: 16px;
+    }
+
+    .project-title {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 24px;
+      letter-spacing: -0.01em;
+    }
+
+    .project-description {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #444;
+      margin-bottom: 32px;
+    }
+
+    /* Métadonnées : client, année, rôle */
+    .project-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .meta-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray-client);
+    }
+
+    .meta-value {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--black);
+    }
+
+    /* ── COLONNE DROITE — médias ── */
+    .project-medias {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-bottom: 48px;
+    }
+
+    /*
+      MÉDIAS — blocs individuels
+      ─────────────────────────
+      Pour une IMAGE :
+        <div class="media-block">
+          <img src="images/ton-image.jpg" alt="..." />
+        </div>
+
+      Pour une VIDÉO :
+        <div class="media-block">
+          <video autoplay loop muted playsinline>
+            <source src="images/ta-video.mp4" type="video/mp4" />
+          </video>
+        </div>
+
+      Ratio par défaut : 16/9
+      Pour changer le ratio, ajoute un style inline :
+        <div class="media-block" style="aspect-ratio: 4/3;">
+    */
+    .media-block {
+      width: 100%;
+      background: var(--gray-client);
+      overflow: hidden;
+    }
+    /* ratio par défaut 16/9 pour les blocs sans iframe */
+    .media-block:not(.vimeo) {
+      aspect-ratio: 16 / 9;
+    }
+
+    .media-block img,
+    .media-block video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ══════════════════════════════════════
+       SECTION MORE
+    ══════════════════════════════════════ */
+    .more-section {
+      padding: 48px var(--pad) 80px;
+    }
+
+    .more-divider {
+      height: 1px;
+      background: var(--black);
+      margin: 0 var(--pad);
+    }
+
+    .more-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--black);
+      margin-bottom: 24px;
+    }
+
+    .more-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .more-card {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      cursor: pointer;
+    }
+
+    .more-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--gray-client);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .more-thumb img,
+    .more-thumb video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.3s ease;
+    }
+
+    .more-thumb .hover-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0);
+      opacity: 0;
+      transition: opacity 0.3s ease, background 0.3s ease;
+      z-index: 2;
+    }
+
+    .more-thumb .hover-label span {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      text-align: center;
+    }
+
+    .more-card:hover .more-thumb img,
+    .more-card:hover .more-thumb video { filter: brightness(0.4); }
+
+    .more-card:hover .more-thumb .hover-label {
+      opacity: 1;
+      background: rgba(0,0,0,0.3);
+    }
+
+
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 24px 32px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      .project-wrapper { padding-left: 32px; padding-right: 32px; }
+      .project-body { grid-template-columns: 1fr; gap: 32px 0; }
+      .project-info { position: relative; top: auto; }
+      .more-section { padding: 48px 32px 64px; }
+      .more-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 540px) {
+      nav { padding: 20px; }
+      .project-wrapper { padding-left: 20px; padding-right: 20px; }
+      .more-section { padding: 48px 20px 48px; }
+      .more-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MENU MOBILE -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" onclick="closeMobile()">Works</a>
+    <a href="about.html" onclick="closeMobile()">About</a>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a class="nav-logo" href="index.html">ELODIE HU</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Works</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ══════════════════════════════════════
+       ZONE PROJET
+  ══════════════════════════════════════ -->
+  <div class="project-wrapper">
+
+    <div class="project-divider"></div>
+
+    <div class="project-body" id="projectBody">
+
+      <!-- ── COLONNE GAUCHE : texte sticky ── -->
+      <div class="project-info" id="projectInfo">
+
+        <h1 class="project-title">Ressources naturelles : <br>
+          entre dépendance aux importations et raréfaction</h1>
+        <!-- ↑ Remplace par le vrai titre -->
+
+        <p class="project-description">
+          Série de 4 vidéos issues d'une collaboration entre Datagora <br> et le Service des données et études statistiques (SDES), <br> pour rendre des informations et 
+          études écologiques accessibles <br> au grand public et sensibiliser aux enjeux environnementaux.
+        </p>
+        <!-- ↑ Remplace par la vraie description -->
+
+      </div>
+      <!-- fin .project-info -->
+
+      <!-- ── COLONNE DROITE : médias ── -->
+      <div class="project-medias" id="projectMedias">
+
+        <!--
+          AJOUTER UN MÉDIA :
+          • Image  → <div class="media-block"><img src="images/..." alt="..." /></div>
+          • Vidéo  → <div class="media-block"><video autoplay loop muted playsinline><source src="images/....mp4" type="video/mp4"/></video></div>
+          • Ratio différent → <div class="media-block" style="aspect-ratio:4/3;">
+        -->
+
+       <div class="media-block">
+        <iframe 
+          src="https://www.youtube.com/embed/sLmf10ESaqY"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          style="width:100%; height:100%;">
+        </iframe>
+      </div>
+
+       <div class="media-block">
+        <iframe 
+          src="https://www.youtube.com/embed/gsTPGRpxMgs"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          style="width:100%; height:100%;">
+        </iframe>
+      </div>
+
+
+       <div class="media-block">
+        <iframe 
+          src="https://www.youtube.com/embed/RuHMLpLTIRI"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          style="width:100%; height:100%;">
+        </iframe>
+      </div>
+
+      <div class="media-block">
+        <iframe 
+          src="https://www.youtube.com/embed/DEp8ragRuGY"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          style="width:100%; height:100%;">
+        </iframe>
+      </div>
+
+      
+
+      </div>
+      <!-- fin .project-medias -->
+
+    </div>
+    <!-- fin .project-body -->
+
+  </div>
+  <!-- fin .project-wrapper -->
+
+  <!-- ══════════════════════════════════════
+       SECTION MORE — autres projets
+  ══════════════════════════════════════ -->
+  <div class="more-divider"></div>
+  <div class="more-section">
+
+
+    <div class="more-grid">
+      <!--
+        REMPLIR LES 3 CARTES avec d'autres projets :
+        • Change href="nom-page.html"
+        • Change src et le label hover
+      -->
+
+      <a class="more-card" href="orsay.html">
+        <div class="more-thumb">
+          <video autoplay loop muted playsinline>
+            <source src="images/orsay-cover.mp4" type="video/mp4" />
+          </video>
+          <div class="hover-label"><span>Musée d'Orsay</span></div>
+        </div>
+      </a>
+
+      <a class="more-card" href="sdes.html">
+        <div class="more-thumb">
+          <video autoplay loop muted playsinline>
+            <source src="images/sdes-video-cover.mp4" type="video/mp4" />
+          </video>
+          <div class="hover-label"><span>Ministère de l'Écologie</span></div>
+        </div>
+      </a>
+
+      <a class="more-card" href="cdd.html">
+        <div class="more-thumb">
+          <video autoplay loop muted playsinline>
+            <source src="images/cdd-cover.mp4" type="video/mp4" />
+          </video>
+          <div class="hover-label"><span>Caisse des Dépôts</span></div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+  <!-- fin .more-section -->
+
+  <script>
+    // ── Hamburger ──
+    function toggleMobile() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+      document.getElementById('hamburger').classList.toggle('open');
+    }
+    function closeMobile() {
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.getElementById('hamburger').classList.remove('open');
+    }
+
+    // Masquer le projet de la page courante dans la section More
+    const currentPage = window.location.pathname.split('/').pop();
+    document.querySelectorAll('.more-card').forEach(card => {
+      if (card.getAttribute('href') === currentPage) {
+        card.style.display = 'none';
+      }
+    });
+
+    // ── Sticky gauche : arrêt quand la zone média se termine ──
+    // Quand le bas de .project-medias arrive au bas de .project-info,
+    // on retire le sticky pour que les deux colonnes scrollent ensemble
+    // vers la section More.
+    const info   = document.getElementById('projectInfo');
+    const medias = document.getElementById('projectMedias');
+    const navH   = parseFloat(getComputedStyle(document.documentElement)
+                    .getPropertyValue('--nav-h')) || 80;
+
+    function onScroll() {
+      const infoH    = info.offsetHeight;
+      const mediasBottom = medias.getBoundingClientRect().bottom;
+      const infoBottom   = navH + infoH;
+
+      if (mediasBottom <= infoBottom) {
+        // La zone médias est arrivée à hauteur de la colonne texte :
+        // on passe le texte en position relative pour qu'il suive le scroll
+        info.style.position = 'relative';
+        info.style.top      = 'auto';
+      } else {
+        info.style.position = 'sticky';
+        info.style.top      = navH + 'px';
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About — Elodie Hu</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #111111;
+      --gray-client: #D9D9D9;
+      --white: #ffffff;
+      --font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --nav-h: 80px;
+      --pad: 48px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--white);
+      color: var(--black);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ══════════════════════════════════════
+       NAVBAR — identique aux autres pages
+    ══════════════════════════════════════ */
+    nav {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 32px 48px;
+    }
+
+    .nav-logo {
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      color: var(--black);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 58px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      color: var(--black);
+      text-transform: uppercase;
+      position: relative;
+      padding-bottom: 2px;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--black);
+      transition: width 0.25s ease;
+    }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--black);
+      transition: all 0.3s ease;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--white);
+      z-index: 99;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 32px;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--black);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ══════════════════════════════════════
+       ABOUT — bloc photo + texte centré
+    ══════════════════════════════════════ */
+    .about-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--nav-h) 24px 24px;
+    }
+
+    .about-inner {
+      display: flex;
+      gap: 24px;                 /* espace photo ↔ texte */
+      align-items: flex-start;
+    }
+
+    /* ── PHOTO 520px carré ── */
+    .about-photo {
+      width: 520px;
+      height: 520px;
+      flex-shrink: 0;
+      overflow: hidden;
+      background: var(--gray-client);
+    }
+
+    .about-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(100%);
+    }
+
+    /* ── COLONNE TEXTE ── */
+    .about-text {
+      width: 573px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Titre en gras — graisse navbar */
+    .about-hello {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--black);
+      margin-bottom: 36px;       /* titre ↔ bio */
+    }
+
+    /* Bio — typo fine 16/19 */
+    .about-bio {
+      display: flex;
+      flex-direction: column;
+      gap: 19px;                 /* interligne entre paragraphes */
+      margin-bottom: 274px;      /* bio ↔ liens */
+    }
+
+    .about-bio p {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 19px;
+      letter-spacing: 0;
+      color: var(--black);
+    }
+
+    /* Liens en gras */
+    .about-links {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .about-links a {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--black);
+      text-decoration: none;
+      width: fit-content;
+      position: relative;
+      padding-bottom: 2px;
+    }
+
+    .about-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--black);
+      transition: width 0.25s ease;
+    }
+    .about-links a:hover::after { width: 100%; }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+    @media (max-width: 1180px) {
+      .about-inner {
+        flex-direction: column;
+        gap: 40px;
+        align-items: flex-start;
+      }
+      .about-photo {
+        width: 100%;
+        max-width: 520px;
+        height: auto;
+        aspect-ratio: 1 / 1;
+      }
+      .about-text {
+        width: 100%;
+        max-width: 520px;
+      }
+      .about-bio { margin-bottom: 48px; }   /* on réduit le grand gap */
+    }
+
+    @media (max-width: 900px) {
+      nav { padding: 24px 32px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      .about-wrapper {
+        align-items: flex-start;
+        padding: calc(var(--nav-h) + 48px) 32px 64px;
+      }
+    }
+
+    @media (max-width: 540px) {
+      nav { padding: 20px; }
+      .about-wrapper { padding-left: 20px; padding-right: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MENU MOBILE -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" onclick="closeMobile()">Works</a>
+    <a href="about.html" onclick="closeMobile()">About</a>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a class="nav-logo" href="index.html">ELODIE HU</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Works</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ABOUT -->
+  <div class="about-wrapper">
+    <div class="about-inner">
+
+      <!-- Photo 520×520 -->
+      <div class="about-photo">
+        <img src="images/photo_about.png" alt="Elodie Hu" />
+        <!-- ↑ Remplace par le vrai nom de ta photo -->
+      </div>
+
+      <!-- Texte -->
+      <div class="about-text">
+
+        <p class="about-hello">Bonjour ! Hello ! 你好 !</p>
+
+        <div class="about-bio">
+          <p>
+            DA et motion designer basée à Paris, diplômée des Gobelins et d'E-artsup.
+            J'aime explorer différentes pratiques créatives et laisser mon imagination me
+            faire voyager.
+          </p>
+          <p>
+            Mes compétences s'étendent du motion design et de l'animation à l'illustration
+            et au graphisme, soutenues par des expériences professionnelles dans des
+            domaines variés.
+          </p>
+        </div>
+
+        <div class="about-links">
+          <a href="cv.html">CV</a>
+          <a href="mailto:aelodie.hu@gmail.com">aelodie.hu@gmail.com</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleMobile() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+      document.getElementById('hamburger').classList.toggle('open');
+    }
+    function closeMobile() {
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.getElementById('hamburger').classList.remove('open');
+    }
+  </script>
+
+</body>
+</html>

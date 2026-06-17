@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elodie Hu</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #111111;
+      --gray-client: #D9D9D9;
+      --white: #ffffff;
+      --font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--white);
+      color: var(--black);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 32px 48px;
+      border: none;
+      box-shadow: none;
+    }
+
+    .nav-logo {
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      color: var(--black);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 58px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      color: var(--black);
+      text-transform: uppercase;
+      position: relative;
+      padding-bottom: 2px;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--black);
+      transition: width 0.25s ease;
+    }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--black);
+      transition: all 0.3s ease;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* Menu mobile overlay */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--white);
+      z-index: 99;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--font);
+      font-size: 32px;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--black);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── FILTRES ── */
+    .filters {
+      padding: 120px 48px 0;
+      display: none;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0;
+    }
+
+    .filter-btn {
+      font-family: var(--font);
+      font-size: 18px;
+      font-weight: 400;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--gray-client);
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .filter-btn.active { color: var(--black); }
+    .filter-btn:hover { color: var(--black); }
+
+    .filter-separator {
+      color: var(--gray-client);
+      font-size: 14px;
+      padding: 0;
+      user-select: none;
+    }
+
+    /* ── GRILLE ── */
+    .grid {
+      padding: 120px 48px 80px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px 48px;
+    }
+
+    .project-card {
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 0.45s ease forwards;
+    }
+
+    .project-card:nth-child(1) { animation-delay: 0.04s; }
+    .project-card:nth-child(2) { animation-delay: 0.08s; }
+    .project-card:nth-child(3) { animation-delay: 0.12s; }
+    .project-card:nth-child(4) { animation-delay: 0.16s; }
+    .project-card:nth-child(5) { animation-delay: 0.20s; }
+    .project-card:nth-child(6) { animation-delay: 0.24s; }
+    .project-card:nth-child(7) { animation-delay: 0.28s; }
+    .project-card:nth-child(8) { animation-delay: 0.32s; }
+    .project-card:nth-child(9) { animation-delay: 0.36s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .project-card.hidden { display: none; }
+
+ .thumbnail {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #D9D9D9;
+  overflow: hidden;
+}
+ 
+    .thumbnail img,
+.thumbnail video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: filter 0.3s ease;
+}
+
+/* Overlay hover */
+.thumbnail {
+  position: relative;
+}
+.thumbnail .hover-label {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0);
+  opacity: 0;
+  transition: opacity 0.3s ease, background 0.3s ease;
+  z-index: 2;
+}
+.thumbnail .hover-label span {
+  font-family: var(--font);
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+}
+.project-card:hover .thumbnail img,
+.project-card:hover .thumbnail video {
+  filter: brightness(0.4);
+}
+.project-card:hover .thumbnail .hover-label {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.3);
+}
+   
+
+    .project-info {
+      padding: 4px 0 0;
+        visibility: hidden;
+    }
+
+    .project-name {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--black);
+      line-height: 1.4;
+      margin-bottom: 0px;
+    }
+
+    .project-client {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--gray-client);
+      line-height: 1.4;
+    }
+
+    /* ── TABLET ── */
+    @media (max-width: 900px) {
+      nav { padding: 24px 32px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .filters { padding: 32px 32px 0; }
+      .grid { padding: 20px 32px 64px; grid-template-columns: repeat(2, 1fr); gap: 48px 24px; }
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 540px) {
+      nav { padding: 20px; }
+      .filters { padding: 24px 20px 0; }
+      .grid { padding: 16px 20px 48px; grid-template-columns: 1fr; gap: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MENU MOBILE -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" onclick="closeMobile()">Works</a>
+    <a href="about.html" onclick="closeMobile()">About</a>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a class="nav-logo" href="index.html">ELODIE HU</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Works</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- FILTRES -->
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">Tout</button>
+   <span class="filter-separator">,&nbsp;</span>
+    <button class="filter-btn" data-filter="motion">motion</button>
+   <span class="filter-separator">,&nbsp;</span>
+    <button class="filter-btn" data-filter="graphisme">graphisme</button>
+   <span class="filter-separator">,&nbsp;</span>
+    <a class="filter-btn" href="illustration.html" style="text-decoration:none;">illustrations</a>
+    
+  </div>
+
+  <!-- GRILLE PROJETS -->
+  <!--
+    ╔══════════════════════════════════════════╗
+    ║  COMMENT AJOUTER / MODIFIER UN PROJET   ║
+    ╠══════════════════════════════════════════╣
+    ║  1. Copie un bloc <a class="project-card">
+    ║  2. Change data-category :
+    ║     motion / graphisme / illustration / direction-artistique
+    ║  3. Change href="nom-de-ta-page.html"
+    ║  4. Mets ton image dans /images/
+    ║     et change src="images/ton-image.jpg"
+    ║  5. Change le nom et le client
+    ╚══════════════════════════════════════════╝
+  -->
+    
+  <div class="grid" id="grid">
+
+      <a class="project-card" href="showreel.html" data-category="motion">
+      <div class="thumbnail">
+        <img src="images/showreel_cover.png" alt="plasticodyssey" />
+  <div class="hover-label"><span>Showreel 2026</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">plasticodyssey</p>
+        <p class="project-client">plasticodyssey</p>
+      </div>
+    </a>
+
+  
+<!--
+    <a class="project-card" href="titlesequence.html" data-category="graphisme">
+        <div class="thumbnail">
+          <video autoplay loop muted playsinline>
+        <source src="images/titlesequence_cover.png" type="video/mp4" />
+      </video>
+  <div class="hover-label"><span>Tampopo - title sequence</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">titlesequence</p>
+        <p class="project-client">titlesequence</p>
+      </div>
+ 
+
+    <a class="project-card" href="orsay.html" data-category="motion">
+      <div class="thumbnail">
+          <video autoplay loop muted playsinline>
+        <source src="images/orsay-cover.mp4" type="video/mp4" />
+      </video>
+  <div class="hover-label"><span>Musée d'Orsay</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">L'aventure impressionnisme</p>
+        <p class="project-client">Musée d'Orsay</p>
+      </div>
+    </a>
+
+
+     <a class="project-card" href="sdes.html" data-category="motion">
+      <div class="thumbnail">
+          <video autoplay loop muted playsinline>
+        <source src="images/sdes-video-cover.mp4" type="video/mp4" />
+      </video>
+  <div class="hover-label"><span>Ministère de l'Écologie</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">Ressources naturelles</p>
+        <p class="project-client">Ministère de l'Écologie</p>
+      </div>
+    </a>
+
+     <a class="project-card" href="insee.html" data-category="motion">
+      <div class="thumbnail">
+          <video autoplay loop muted playsinline>
+        <source src="images/insee-cover.mp4" type="video/mp4" />
+      </video>
+  <div class="hover-label"><span>INSEE</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">Entreprises</p>
+        <p class="project-client">Institut national de la statistique et des études économiques</p>
+      </div>
+    </a>
+
+    <a class="project-card" href="musicicons.html" data-category="motion">
+      <div class="thumbnail">
+          <video autoplay loop muted playsinline>
+        <source src="images/musicicons_video3.mp4" type="video/mp4" />
+      </video>
+  <div class="hover-label"><span>Music icons</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">musicicons</p>
+        <p class="project-client">musicicons</p>
+     </div>
+    </a>
+-->
+<!-- 
+    <a class="project-card" href="pmu_contenus_digitaux.html" data-category="graphisme">
+      <div class="thumbnail">
+        <img src="images/pmu_contenus_digitaux_cover.png" alt="pmuplay" />
+      <div class="hover-label"><span>PMU® - Contenus digitaux</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">PMUPLAY_conteneus_digitaux</p>
+        <p class="project-client">PMU</p>
+      </div>
+    </a>
+
+     <a class="project-card" href="mugler.html" data-category="motion">
+      <div class="thumbnail">
+        <video autoplay loop muted playsinline>
+          <source src="images/mugler_cover.mp4" type="video/mp4" />
+        </video>
+      <div class="hover-label"><span>Mugler</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">Mugler</p>
+        <p class="project-client">Personel</p>
+      </div>
+    </a>
+
+    <a class="project-card" href="infographies.html" data-category="graphisme">
+        <div class="thumbnail">
+          <video autoplay loop muted playsinline>
+        <source src="images/infographies_cover.mp4" type="video/mp4" />
+      </video>
+  <div class="hover-label"><span>Datagora, Les Echos, CURIEUX!, L'Éco...</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">Infographies</p>
+        <p class="project-client">Infographies</p>
+      </div>
+    </a>
+
+     <a class="project-card" href="cdd.html" data-category="motion">
+      <div class="thumbnail">
+          <video autoplay loop muted playsinline>
+        <source src="images/cdd-cover.mp4" type="video/mp4" />
+      </video>
+  <div class="hover-label"><span>Caisse des dépots</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">Caisse des Dépôts</p>
+        <p class="project-client">Datagora</p>
+      </div>
+    </a>
+
+    <a class="project-card" href="artisanat.html" data-category="motion">
+       <div class="thumbnail">
+          <video autoplay loop muted playsinline>
+        <source src="images/Artisanats-chinois-cover.mp4" type="video/mp4" />
+      </video>
+  <div class="hover-label"><span>Artisanats chinois</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">Artisanats-chinois</p>
+        <p class="project-client">Institut national de la statistique et des études économiques</p>
+      </div>
+    </a>
+
+<a class="project-card" href="aznavour.html" data-category="motion">
+       <div class="thumbnail">
+          <video autoplay loop muted playsinline>
+        <source src="images/aznavour_cover.mp4" type="video/mp4" />
+      </video>
+  <div class="hover-label"><span>aznavour</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">Universal Music France</p>
+        <p class="project-client"></p>
+      </div>
+    </a>
+
+-->
+     <a class="project-card" href="orsay.html" data-category="motion">
+      <div class="thumbnail">
+        <img src="images/orsay-still-2.jpg" alt="plasticodyssey" />
+  <div class="hover-label"><span>L'aventure impressionnisme</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">plasticodyssey</p>
+        <p class="project-client">plasticodyssey</p>
+      </div>
+    </a>
+  
+
+    <a class="project-card" href="plasticodyssey.html" data-category="motion">
+      <div class="thumbnail">
+        <img src="images/plasticodyssey_5.png" alt="plasticodyssey" />
+  <div class="hover-label"><span>Plastic Odyssey</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">plasticodyssey</p>
+        <p class="project-client">plasticodyssey</p>
+      </div>
+    </a>
+
+    <a class="project-card" href="sdes.html" data-category="motion">
+      <div class="thumbnail">
+        <img src="images/sdes_cover.png" alt="plasticodyssey" />
+  <div class="hover-label"><span>Plastic Odyssey</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">plasticodyssey</p>
+        <p class="project-client">plasticodyssey</p>
+      </div>
+    </a>
+
+  
+    <a class="project-card" href="insee.html" data-category="motion">
+      <div class="thumbnail">
+        <img src="images/insee_cover.png" alt="plasticodyssey" />
+  <div class="hover-label"><span>INSEE</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">plasticodyssey</p>
+        <p class="project-client">plasticodyssey</p>
+      </div>
+    </a>
+   
+        <a class="project-card" href="clubmed.html" data-category="motion">
+      <div class="thumbnail">
+         <img src="images/qapsule_cover.png" alt="pmuplay" />
+      <div class="hover-label"><span>ClubMED - PMU® </span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">qapsule</p>
+        <p class="project-client">Personel</p>
+      </div>
+    </a> 
+
+
+    <a class="project-card" href="humanappeal.html" data-category="motion">
+      <div class="thumbnail">
+        <img src="images/humanappeal-cover.png" alt="humanappeal" />
+      <div class="hover-label"><span>Human Appeal</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">Enfants et orphelins en contextes de crise</p>
+        <p class="project-client">Human Appeal</p>
+      </div>
+    </a>
+
+     <a class="project-card" href="mugler.html" data-category="motion">
+      <div class="thumbnail">
+        <img src="images/mugler_cover.png" alt="humanappeal" />
+      <div class="hover-label"><span>Mugler</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">Enfants et orphelins en contextes de crise</p>
+        <p class="project-client">Human Appeal</p>
+      </div>
+    </a>
+
+    <a class="project-card" href="infographies.html" data-category="motion">
+      <div class="thumbnail">
+        <img src="images/infographies_cover.png" alt="humanappeal" />
+      <div class="hover-label"><span>Datagora, Les Echos, CURIEUX!, L'Éco...</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">Enfants et orphelins en contextes de crise</p>
+        <p class="project-client">Human Appeal</p>
+      </div>
+    </a>
+
+    <a class="project-card" href="titlesequence.html" data-category="motion">
+      <div class="thumbnail">
+        <img src="images/titlesequence_cover.png" alt="plasticodyssey" />
+  <div class="hover-label"><span>Tampopo - title sequence</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">plasticodyssey</p>
+        <p class="project-client">plasticodyssey</p>
+      </div>
+    </a>
+
+     <a class="project-card" href="cdd.html" data-category="motion">
+      <div class="thumbnail">
+        <img src="images/cdd_cover.png" alt="humanappeal" />
+      <div class="hover-label"><span>Caisse des dépots</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">Enfants et orphelins en contextes de crise</p>
+        <p class="project-client">Human Appeal</p>
+      </div>
+    </a>
+
+
+    <a class="project-card" href="illustrations.html" data-category="motion">
+      <div class="thumbnail">
+        <img src="images/illustrations_cover.png" alt="illustrations" />
+      <div class="hover-label"><span>Illustrations</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">illustrations</p>
+        <p class="project-client">illustrations</p>
+      </div>
+    </a>
+
+     <a class="project-card" href="artisanat.html" data-category="motion">
+      <div class="thumbnail">
+        <img src="images/artisanat-5.png" alt="illustrations" />
+      <div class="hover-label"><span>Artisanats chinois</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">illustrations</p>
+        <p class="project-client">illustrations</p>
+      </div>
+    </a>
+      
+
+    <a class="project-card" href="aznavour.html" data-category="motion">
+      <div class="thumbnail">
+        <img src="images/aznavour_cover.png" alt="illustrations" />
+      <div class="hover-label"><span>Universal Music France</span></div>
+  </div>
+      <div class="project-info">
+        <p class="project-name">illustrations</p>
+        <p class="project-client">illustrations</p>
+      </div>
+    </a>
+    
+    
+  </div>
+
+  <script>
+    // Filtres
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.project-card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        let i = 0;
+        cards.forEach(card => {
+          const match = filter === 'all' || card.dataset.category === filter;
+          if (match) {
+            card.classList.remove('hidden');
+            card.style.animation = 'none';
+            card.offsetHeight;
+            card.style.animation = '';
+            card.style.animationDelay = `${i * 0.06}s`;
+            i++;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // Hamburger
+    function toggleMobile() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+      document.getElementById('hamburger').classList.toggle('open');
+    }
+    function closeMobile() {
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.getElementById('hamburger').classList.remove('open');
+    }
+  </script>
+
+</body>
+</html>
