@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Projet — Elodie Hu</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png" />
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -224,25 +227,7 @@
       padding-bottom: 48px;
     }
 
-    /*
-      MÉDIAS — blocs individuels
-      ─────────────────────────
-      Pour une IMAGE :
-        <div class="media-block">
-          <img src="images/ton-image.jpg" alt="..." />
-        </div>
-
-      Pour une VIDÉO :
-        <div class="media-block">
-          <video autoplay loop muted playsinline>
-            <source src="images/ta-video.mp4" type="video/mp4" />
-          </video>
-        </div>
-
-      Ratio par défaut : 16/9
-      Pour changer le ratio, ajoute un style inline :
-        <div class="media-block" style="aspect-ratio: 4/3;">
-    */
+    
     .media-block {
       width: 100%;
       aspect-ratio: 16 / 9;
@@ -338,7 +323,6 @@
     }
 
 
-
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       nav { padding: 24px 32px; }
@@ -364,7 +348,7 @@
 
   <!-- MENU MOBILE -->
   <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html" onclick="closeMobile()">Works</a>
+    <a href="index.html#grid" onclick="closeMobile()">Works</a>
     <a href="about.html" onclick="closeMobile()">About</a>
   </div>
 
@@ -372,7 +356,7 @@
   <nav>
     <a class="nav-logo" href="index.html">ELODIE HU</a>
     <ul class="nav-links">
-      <li><a href="index.html">Works</a></li>
+      <li><a href="index.html#grid">Works</a></li>
       <li><a href="about.html">About</a></li>
     </ul>
     <button class="hamburger" id="hamburger" onclick="toggleMobile()" aria-label="Menu">
@@ -407,12 +391,7 @@
       <!-- ── COLONNE DROITE : médias ── -->
       <div class="project-medias" id="projectMedias">
 
-        <!--
-          AJOUTER UN MÉDIA :
-          • Image  → <div class="media-block"><img src="images/..." alt="..." /></div>
-          • Vidéo  → <div class="media-block"><video autoplay loop muted playsinline><source src="images/....mp4" type="video/mp4"/></video></div>
-          • Ratio différent → <div class="media-block" style="aspect-ratio:4/3;">
-        -->
+        
 
       <div class="media-block">
         <iframe 
@@ -427,13 +406,13 @@
          
 
         <div class="media-block">
-          <img src="images/artisanat-2.png" alt="..." />
+          <img src="images/artisanat-2.webp" alt="..." />
         </div>
 
         
 
         <div class="media-block">
-          <img src="images/artisanat-3.png" alt="..." />
+          <img src="images/artisanat-3.webp" alt="..."  loading="lazy" />
         </div>
 
       </div>

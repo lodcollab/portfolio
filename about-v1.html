@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About v1 — Elodie Hu</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png" />
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #111111;
+      --gray-client: #D9D9D9;
+      --white: #ffffff;
+      --rule: #B5B5B5;
+      --font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --nav-h: 80px;
+      --pad: 48px;
+      --cyan: #22CFF5;
+      --green: #00EF5F;
+      --yellow: #FFF500;
+      --magenta: #FF3DE0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--white);
+      color: var(--black);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 32px var(--pad);
+    }
+
+    .nav-logo {
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      color: var(--black);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 58px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      color: var(--black);
+      text-transform: uppercase;
+      position: relative;
+      padding-bottom: 2px;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--black);
+      transition: width 0.25s ease;
+    }
+    .nav-links a:hover::after { width: 100%; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--black);
+      transition: all 0.3s ease;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--white);
+      z-index: 99;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 32px;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--black);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ══════════════════════════════════════
+       LISTE DÉPLIANTE
+
+       Titres, contenus et traits sont tous
+       enfants directs de .cats : c'est ce qui
+       permet au trait d'une catégorie ouverte
+       de redescendre avec le groupe du bas.
+    ══════════════════════════════════════ */
+    .cats {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: var(--nav-h) var(--pad) 40px;
+    }
+
+    /* Moitié droite : zone morte. Y entrer referme la catégorie ouverte.
+       Transparente, elle ne recouvre que du blanc. */
+    .close-zone {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    /* Au repos, ces deux espaces égaux centrent le groupe verticalement.
+       Ils se rétractent en douceur à l'ouverture. */
+    .cats-spacer {
+      flex: 1 1 0;
+      transition: flex-grow 0.45s cubic-bezier(.4,0,.2,1);
+    }
+    .cats.has-open .cats-spacer { flex-grow: 0; }
+
+    .rule {
+      flex: none;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    .cat-title {
+      flex: none;
+      display: block;
+      width: 50%;
+      position: relative;
+      z-index: 3;
+      background: none;
+      border: none;
+      padding: 16px 0;
+      font-family: var(--font);
+      font-size: clamp(17px, 2vw, 38px);
+      font-weight: 700;
+      line-height: 1.04;
+      letter-spacing: -0.015em;
+      color: var(--black);
+      text-align: left;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: padding 0.4s cubic-bezier(.4,0,.2,1),
+                  line-height 0.4s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* Dès qu'une catégorie est ouverte, toutes les lignes se resserrent */
+    .cats.has-open .cat-title {
+      padding: 1px 0;
+      line-height: 0.92;
+    }
+
+    .cat-body {
+      flex: none;
+      width: 50%;
+      position: relative;
+      z-index: 3;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(.4,0,.2,1),
+                  opacity 0.3s ease,
+                  padding 0.45s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* La marge automatique repousse en bas de l'écran tout ce qui suit :
+       le trait de cette catégorie, puis les catégories suivantes. */
+    .cat-body.is-open {
+      max-height: 72vh;
+      opacity: 1;
+      padding: 22px 0 34px;
+      margin-bottom: auto;
+      overflow-y: auto;
+    }
+
+    /* ── Contenu ── */
+    .entry { margin-bottom: 30px; }
+    .entry:last-child { margin-bottom: 0; }
+
+    .entry-title {
+      font-size: clamp(15px, 1.15vw, 21px);
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+
+    .hl {
+      padding: 1px 10px 2px 2px;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+    .hl-cyan    { background: var(--cyan); }
+    .hl-green   { background: var(--green); }
+    .hl-yellow  { background: var(--yellow); }
+    .hl-magenta { background: var(--magenta); }
+
+    .entry-meta {
+      padding-left: 56px;
+      font-size: clamp(14px, 1.05vw, 19px);
+      font-weight: 700;
+      line-height: 1.55;
+    }
+
+    .entry-note {
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    .contact-mail {
+      display: inline-block;
+      font-size: clamp(15px, 1.15vw, 21px);
+      font-weight: 700;
+      color: var(--black);
+      text-decoration: none;
+      padding: 1px 10px 2px 2px;
+      background: var(--yellow);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      :root { --pad: 32px; }
+      nav { padding: 24px var(--pad); }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .entry-meta { padding-left: 28px; }
+
+      /* Pas de survol au doigt : on récupère toute la largeur */
+      .cat-title, .cat-body { width: 100%; }
+      .close-zone { display: none; }
+    }
+
+    @media (max-width: 540px) {
+      :root { --pad: 20px; }
+      .cat-title { padding: 12px 0; }
+      .cat-body.is-open { max-height: 66vh; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cat-title, .cat-body, .cats-spacer { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MENU MOBILE -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html#grid" onclick="closeMobile()">Works</a>
+    <a href="about.html" onclick="closeMobile()">About</a>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a class="nav-logo" href="index.html">ELODIE HU</a>
+    <ul class="nav-links">
+      <li><a href="index.html#grid">Works</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- LISTE DÉPLIANTE -->
+  <div class="cats" id="cats">
+
+    <div class="cats-spacer"></div>
+
+    <button class="cat-title" data-i="0" aria-expanded="false" aria-controls="p-formations">Formations</button>
+    <div class="cat-body" data-i="0" id="p-formations">
+
+      <div class="entry">
+        <p class="entry-title"><span class="hl hl-cyan">Bachelor directeur artistique en stratégie et design de marque</span></p>
+        <div class="entry-meta">
+          <p>Intuit Lab Paris</p>
+          <p>2021-2023</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <p class="entry-title"><span class="hl hl-green">Bachelor graphiste motion design</span></p>
+        <div class="entry-meta">
+          <p>Gobelins Paris</p>
+          <p>2023-2024</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <p class="entry-title"><span class="hl hl-yellow">Mastère motion design</span></p>
+        <div class="entry-meta">
+          <p>E-artsup</p>
+          <p>2024-2026</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="rule"></div>
+
+    <button class="cat-title" data-i="1" aria-expanded="false" aria-controls="p-experiences">Experiences</button>
+    <div class="cat-body" data-i="1" id="p-experiences">
+
+      <div class="entry">
+        <p class="entry-title"><span class="hl hl-magenta">Assistante graphiste</span></p>
+        <div class="entry-meta">
+          <p>Afrouz R.Studio</p>
+          <p>Juin - juillet 2023</p>
+          <p>Stage</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <p class="entry-title"><span class="hl hl-green">Assistante graphiste et motion design</span></p>
+        <div class="entry-meta">
+          <p>Grizzly Chéri</p>
+          <p>Juin - juillet 2024</p>
+          <p>Stage</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <p class="entry-title"><span class="hl hl-yellow">Motion designer</span></p>
+        <div class="entry-meta">
+          <p>Datagora - Les Échos-Le Parisien</p>
+          <p>Septembre 2024 - Août 2025</p>
+          <p>Alternance</p>
+          <p class="entry-note">Références - Recommandée par Timothée Gidoin et Alexis Lenoir</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <p class="entry-title"><span class="hl hl-cyan">Directrice artistique junior</span></p>
+        <div class="entry-meta">
+          <p>PMU</p>
+          <p>Septembre 2025 - Août 2026</p>
+          <p>Alternance</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="rule"></div>
+
+    <button class="cat-title" data-i="2" aria-expanded="false" aria-controls="p-competences">Competences</button>
+    <div class="cat-body" data-i="2" id="p-competences">
+
+      <div class="entry">
+        <p class="entry-title"><span class="hl hl-magenta">Languages</span></p>
+        <div class="entry-meta">
+          <p>Français</p>
+          <p>Anglais</p>
+          <p>Chinois</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <p class="entry-title"><span class="hl hl-green">Logiciels</span></p>
+        <div class="entry-meta">
+          <p>After Effects</p>
+          <p>Illustrator</p>
+          <p>Photoshop</p>
+          <p>Figma</p>
+          <p>AI (Claude, Nanobanana, Seedance...)</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="rule"></div>
+
+    <button class="cat-title" data-i="3" aria-expanded="false" aria-controls="p-contact">Contact</button>
+    <div class="cat-body" data-i="3" id="p-contact">
+      <a class="contact-mail" href="mailto:aelodiehu@gmail.com">aelodiehu@gmail.com</a>
+    </div>
+    <div class="rule"></div>
+
+    <div class="cats-spacer"></div>
+
+    <div class="close-zone" id="closeZone" aria-hidden="true"></div>
+
+  </div>
+
+  <script>
+    (function () {
+      var cats = document.getElementById('cats');
+      var titles = Array.prototype.slice.call(cats.querySelectorAll('.cat-title'));
+      var bodies = Array.prototype.slice.call(cats.querySelectorAll('.cat-body'));
+      var canHover = window.matchMedia('(hover: hover)').matches;
+      var timer = null, lockTimer = null, locked = false, current = -1;
+
+      function closeAll() {
+        titles.forEach(function (t) { t.setAttribute('aria-expanded', 'false'); });
+        bodies.forEach(function (b) { b.classList.remove('is-open'); });
+        cats.classList.remove('has-open');
+        current = -1;
+      }
+
+      function open(i) {
+        if (i === current) return;
+        closeAll();
+        titles[i].setAttribute('aria-expanded', 'true');
+        bodies[i].classList.add('is-open');
+        cats.classList.add('has-open');
+        current = i;
+
+        // Pendant que la mise en page se réorganise, le curseur se retrouve
+        // mécaniquement hors de la liste : on ignore toute fermeture.
+        locked = true;
+        clearTimeout(lockTimer);
+        lockTimer = setTimeout(function () { locked = false; }, 550);
+      }
+
+      titles.forEach(function (title, i) {
+        // Toute la ligne du titre déclenche l'ouverture, pas seulement le mot :
+        // le texte se déplace en s'ouvrant, une cible étroite se déroberait.
+        if (canHover) {
+          title.addEventListener('mouseenter', function () {
+            clearTimeout(timer);
+            open(i);
+          });
+        }
+        title.addEventListener('click', function () {
+          if (i === current) closeAll(); else open(i);
+        });
+        title.addEventListener('focus', function () {
+          clearTimeout(timer);
+          open(i);
+        });
+      });
+
+      // On ne referme qu'en quittant la liste entière : rester dans la zone
+      // dépliée la maintient ouverte, où que soit le curseur.
+      if (canHover) {
+        cats.addEventListener('mouseenter', function () { clearTimeout(timer); });
+        cats.addEventListener('mouseleave', function () {
+          if (locked) return;
+          clearTimeout(timer);
+          timer = setTimeout(closeAll, 160);
+        });
+
+        // La moitié droite referme. Pas de verrou ici : la position
+        // horizontale du curseur ne bouge pas pendant la réorganisation.
+        document.getElementById('closeZone')
+          .addEventListener('mouseenter', function () {
+            clearTimeout(timer);
+            closeAll();
+          });
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeAll();
+      });
+    })();
+
+    function toggleMobile() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+      document.getElementById('hamburger').classList.toggle('open');
+    }
+    function closeMobile() {
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.getElementById('hamburger').classList.remove('open');
+    }
+  </script>
+
+</body>
+</html>

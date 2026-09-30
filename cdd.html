@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Projet — Elodie Hu</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png" />
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -220,29 +223,17 @@
     .project-medias {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
       padding-bottom: 48px;
     }
 
-    /*
-      MÉDIAS — blocs individuels
-      ─────────────────────────
-      Pour une IMAGE :
-        <div class="media-block">
-          <img src="images/ton-image.jpg" alt="..." />
-        </div>
+    /* Ligne de 2 vidéos */
+    .media-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
 
-      Pour une VIDÉO :
-        <div class="media-block">
-          <video autoplay loop muted playsinline>
-            <source src="images/ta-video.mp4" type="video/mp4" />
-          </video>
-        </div>
-
-      Ratio par défaut : 16/9
-      Pour changer le ratio, ajoute un style inline :
-        <div class="media-block" style="aspect-ratio: 4/3;">
-    */
     .media-block {
       width: 100%;
       aspect-ratio: 16 / 9;
@@ -250,11 +241,26 @@
       overflow: hidden;
     }
 
+    /* 3e vidéo : même largeur qu'une colonne du haut, centrée */
+    .media-single {
+      width: calc(50% - 6px);
+      align-self: center;
+    }
+
     .media-block img,
-    .media-block video {
+    .media-block video,
+    .media-block iframe {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
+      border: 0;
+    }
+
+    /* Image pleine largeur, proportion d'origine, sans recadrage */
+    .media-full img {
+      width: 100%;
+      height: auto;
       display: block;
     }
 
@@ -338,7 +344,6 @@
     }
 
 
-
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       nav { padding: 24px 32px; }
@@ -357,6 +362,8 @@
       .project-wrapper { padding-left: 20px; padding-right: 20px; }
       .more-section { padding: 48px 20px 48px; }
       .more-grid { grid-template-columns: 1fr; }
+      .media-row { grid-template-columns: 1fr; }
+      .media-single { width: 100%; }
     }
   </style>
 </head>
@@ -364,7 +371,7 @@
 
   <!-- MENU MOBILE -->
   <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html" onclick="closeMobile()">Works</a>
+    <a href="index.html#grid" onclick="closeMobile()">Works</a>
     <a href="about.html" onclick="closeMobile()">About</a>
   </div>
 
@@ -372,7 +379,7 @@
   <nav>
     <a class="nav-logo" href="index.html">ELODIE HU</a>
     <ul class="nav-links">
-      <li><a href="index.html">Works</a></li>
+      <li><a href="index.html#grid">Works</a></li>
       <li><a href="about.html">About</a></li>
     </ul>
     <button class="hamburger" id="hamburger" onclick="toggleMobile()" aria-label="Menu">
@@ -393,15 +400,10 @@
       <div class="project-info" id="projectInfo">
 
         <h1 class="project-title">Caisse des dépôts X Datagora</h1>
-        <!-- ↑ Remplace par le vrai titre -->
 
         <p class="project-description">
-          La Caisse des Dépôts est une institution financière publique française. 
-          Dans le cadre d'une coproduction avec Datagora, <br> une série de vidéos pédagogiques explique 
-          ses 5 domaines d'expertise : les politiques sociales, la gestion d'actifs, 
-          <br> le suivi des filiales et des participations, le financement <br> des entreprises et la Banque des Territoires.
+          La Caisse des Dépôts est une institution financière publique française. Dans le cadre d'une coproduction avec Datagora, une série de vidéos pédagogiques explique ses 5 domaines d'expertise : les politiques sociales, la gestion d'actifs, le suivi des filiales et des participations, le financement des entreprises et la Banque des Territoires.
         </p>
-        <!-- ↑ Remplace par la vraie description -->
 
       </div>
       <!-- fin .project-info -->
@@ -409,44 +411,43 @@
       <!-- ── COLONNE DROITE : médias ── -->
       <div class="project-medias" id="projectMedias">
 
-        <!--
-          AJOUTER UN MÉDIA :
-          • Image  → <div class="media-block"><img src="images/..." alt="..." /></div>
-          • Vidéo  → <div class="media-block"><video autoplay loop muted playsinline><source src="images/....mp4" type="video/mp4"/></video></div>
-          • Ratio différent → <div class="media-block" style="aspect-ratio:4/3;">
-        -->
+        <div class="media-row">
 
-        <div class="media-block">
-        <iframe 
-          src="https://www.youtube.com/embed/FL280PsPEBA"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-          style="width:100%; height:100%;">
-        </iframe>
-      </div>
+          <div class="media-block">
+            <iframe
+              src="https://www.youtube.com/embed/FL280PsPEBA"
+              title="Caisse des Dépôts x Datagora — épisode 1"
+              frameborder="0"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
+          </div>
 
+          <div class="media-block">
+            <iframe
+              src="https://www.youtube.com/embed/d8BKhsyZZTs"
+              title="Caisse des Dépôts x Datagora — épisode 2"
+              frameborder="0"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
+          </div>
 
-        <div class="media-block">
-        <iframe 
-          src="https://www.youtube.com/embed/d8BKhsyZZTs"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-          style="width:100%; height:100%;">
-        </iframe>
-      </div>
-<!-- 
-      <div class="media-block">
-        <iframe 
-          src="https://www.youtube.com/embed/oVl4O__hsyQ"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-          style="width:100%; height:100%;">
-        </iframe>
-      </div>
--->
+        </div>
+
+        <div class="media-block media-single">
+          <iframe
+            src="https://www.youtube.com/embed/GiOkN-j_HCs"
+            title="Caisse des Dépôts x Datagora — épisode 3"
+            frameborder="0"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+
+        <div class="media-full">
+          <img src="images/cdd_1.webp" alt="Planche de photogrammes, Caisse des Dépôts x Datagora" loading="lazy" />
+        </div>
 
       </div>
       <!-- fin .project-medias -->
