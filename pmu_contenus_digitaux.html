@@ -252,10 +252,18 @@
     }
 
     /* Image pleine largeur, proportion d'origine, sans recadrage */
-    .media-full img {
+    .media-full img,
+    .media-full video {
       width: 100%;
       height: auto;
       display: block;
+    }
+
+    /* Médias accolés, sans gouttière entre eux */
+    .media-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
     }
 
     /* ══════════════════════════════════════
@@ -392,14 +400,13 @@
       <!-- ── COLONNE GAUCHE : texte sticky ── -->
       <div class="project-info" id="projectInfo">
 
-        <h1 class="project-title">PMU® - contenus digitaux</h1>
+        <h1 class="project-title">PMUPLAY® - contenus digitaux</h1>
         <!-- ↑ Remplace par le vrai titre -->
 
         <p class="project-description">
-          Contenus digitaux réalisés au sein de l'équipe Brand design de la direction MED (Marque, Expérience et Design) de PMU, 
-          en respectant la charte graphique de PMUPLAY. Des visuels produits 
-          à l'aide de la génération d'images et de vidéos par IA, 
-          After Effects, Figma et Photoshop, déclinés sur divers formats réseaux sociaux.
+          Contenus digitaux réalisés au sein de l'équipe Brand Design de la direction MED (Marque, Expérience et Design) de PMU, dans le respect de la charte PMUPLAY.
+          <br><br>
+          Les visuels mêlent génération d'images et de vidéos par IA, After Effects, Figma et Photoshop, déclinés sur l'ensemble des formats réseaux sociaux.
         </p>
         <!-- ↑ Remplace par la vraie description -->
 
@@ -408,6 +415,23 @@
 
       <!-- ── COLONNE DROITE : médias ── -->
       <div class="project-medias" id="projectMedias">
+
+        <div class="media-stack">
+          <div class="media-full">
+            <img src="images/pmu_1.webp" alt="Contenus digitaux PMUPLAY" />
+          </div>
+          <div class="media-full">
+            <video src="images/pmu_2.mp4" poster="images/pmu_2_poster.webp"
+                   autoplay loop muted playsinline preload="metadata"></video>
+          </div>
+          <div class="media-full">
+            <video src="images/pmu_3.mp4" poster="images/pmu_3_poster.webp"
+                   autoplay loop muted playsinline preload="metadata"></video>
+          </div>
+          <div class="media-full">
+            <img src="images/pmu_4.webp" alt="Contenus digitaux PMUPLAY" loading="lazy" />
+          </div>
+        </div>
 
       </div>
       <!-- fin .project-medias -->
@@ -421,41 +445,51 @@
   <!-- ══════════════════════════════════════
        SECTION MORE — autres projets
   ══════════════════════════════════════ -->
+
   <div class="more-divider"></div>
   <div class="more-section">
-
-
-    <div class="more-grid">
-      <!--
-        REMPLIR LES 3 CARTES avec d'autres projets :
-        • Change href="nom-page.html"
-        • Change src et le label hover
-      -->
-
-      <a class="more-card" href="orsay.html">
-        <div class="more-thumb">
-          <img src="images/orsay-still-2.webp" alt="" loading="lazy" />
-          <div class="hover-label"><span>Musée d'Orsay</span></div>
-        </div>
-      </a>
-
-      <a class="more-card" href="sdes.html">
-        <div class="more-thumb">
-          <img src="images/sdes_cover.webp" alt="" loading="lazy" />
-          <div class="hover-label"><span>Ministère de l'Écologie</span></div>
-        </div>
-      </a>
-
-      <a class="more-card" href="cdd.html">
-        <div class="more-thumb">
-          <img src="images/cdd_cover.webp" alt="" loading="lazy" />
-          <div class="hover-label"><span>Caisse des Dépôts</span></div>
-        </div>
-      </a>
-
-    </div>
+    <p class="more-label">Autres projets</p>
+    <div class="more-grid" id="moreGrid"></div>
   </div>
-  <!-- fin .more-section -->
+
+  <script>
+    // 3 projets tirés au hasard, jamais la page courante, jamais de doublon.
+    (function () {
+      var P = [
+        {h:"titlesequence.html", i:"titlesequence_cover.webp", n:"Title sequence - Tampopo"},
+        {h:"orsay.html", i:"orsay-still-2.webp", n:"L'aventure impressionniste - Mus\u00e9e d'Orsay"},
+        {h:"pmu_contenus_digitaux.html", i:"pmuplay_cover.webp", n:"PMUPLAY\u00ae - contenus digitaux"},
+        {h:"sdes.html", i:"sdes_cover.webp", n:"4 grands d\u00e9fis pour demain - SDES"},
+        {h:"mugler.html", i:"mugler_cover.webp", n:"Les Exceptions \u2014 Mugler"},
+        {h:"humanappeal.html", i:"humanappeal-cover.webp", n:"Orphelins et enfants en contexte de crise - Human Appeal"},
+        {h:"illustrations.html", i:"illustrations_cover.webp", n:"Illustrations"},
+        {h:"clubmed.html", i:"qapsule_cover.webp", n:"ClubMED\u00ae - PMU\u00ae"},
+        {h:"insee.html", i:"insee_cover.webp", n:"L'essentiel du PIB - INSEE"},
+        {h:"cdd.html", i:"cdd_cover.webp", n:"S\u00e9rie de vid\u00e9o - Caisse des D\u00e9p\u00f4ts"},
+        {h:"infographies.html", i:"infographies_cover.webp", n:"Infographie - Les Echos, Datagora ..."},
+        {h:"artisanat.html", i:"artisanat-5.webp", n:"Artisanats chinois"},
+        {h:"aznavour.html", i:"aznavour_cover.webp", n:"Charles Aznavour - Universal Music France"}
+      ];
+      var ici = location.pathname.split('/').pop() || 'index.html';
+      var pool = P.filter(function (p) { return p.h !== ici; });
+
+      // Mélange de Fisher-Yates : chaque tirage est équiprobable,
+      // et retirer les éléments au fur et à mesure exclut les doublons.
+      for (var i = pool.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+      }
+
+      document.getElementById('moreGrid').innerHTML = pool.slice(0, 3).map(function (p) {
+        return '<a class="more-card" href="' + p.h + '">'
+             +   '<div class="more-thumb">'
+             +     '<img src="images/' + p.i + '" alt="" loading="lazy" />'
+             +     '<div class="hover-label"><span>' + p.n + '</span></div>'
+             +   '</div>'
+             + '</a>';
+      }).join('');
+    })();
+  </script>
 
   <script>
     // ── Hamburger ──

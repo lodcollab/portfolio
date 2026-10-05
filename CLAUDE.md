@@ -34,6 +34,15 @@ Règles à appliquer par défaut sur tout le site, sans redemander.
 - **Sans perte** si l'image a moins de 5 000 couleurs (illustrations à aplats),
   sinon qualité 88 avec rééchantillonnage Lanczos.
 - Sources conservées dans `_source/` (jamais publié, cf `.gitignore`).
+- **Aucune correction colorimétrique.** Les fichiers sont encodés tels quels,
+  même si une vidéo et une image voisines ne tombent pas exactement sur la
+  même teinte.
+
+## Vidéos
+
+- MP4 H.264, 1600 px, CRF 26, sans piste audio, `-movflags +faststart`.
+- `<video autoplay loop muted playsinline preload="metadata">` avec un
+  `poster` en WebP tiré de la première image.
 
 ## Code
 

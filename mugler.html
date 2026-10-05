@@ -493,6 +493,51 @@
        SECTION MORE — autres projets
   ══════════════════════════════════════ -->
  
+  <div class="more-divider"></div>
+  <div class="more-section">
+    <p class="more-label">Autres projets</p>
+    <div class="more-grid" id="moreGrid"></div>
+  </div>
+
+  <script>
+    // 3 projets tirés au hasard, jamais la page courante, jamais de doublon.
+    (function () {
+      var P = [
+        {h:"titlesequence.html", i:"titlesequence_cover.webp", n:"Title sequence - Tampopo"},
+        {h:"orsay.html", i:"orsay-still-2.webp", n:"L'aventure impressionniste - Mus\u00e9e d'Orsay"},
+        {h:"pmu_contenus_digitaux.html", i:"pmuplay_cover.webp", n:"PMUPLAY\u00ae - contenus digitaux"},
+        {h:"sdes.html", i:"sdes_cover.webp", n:"4 grands d\u00e9fis pour demain - SDES"},
+        {h:"mugler.html", i:"mugler_cover.webp", n:"Les Exceptions \u2014 Mugler"},
+        {h:"humanappeal.html", i:"humanappeal-cover.webp", n:"Orphelins et enfants en contexte de crise - Human Appeal"},
+        {h:"illustrations.html", i:"illustrations_cover.webp", n:"Illustrations"},
+        {h:"clubmed.html", i:"qapsule_cover.webp", n:"ClubMED\u00ae - PMU\u00ae"},
+        {h:"insee.html", i:"insee_cover.webp", n:"L'essentiel du PIB - INSEE"},
+        {h:"cdd.html", i:"cdd_cover.webp", n:"S\u00e9rie de vid\u00e9o - Caisse des D\u00e9p\u00f4ts"},
+        {h:"infographies.html", i:"infographies_cover.webp", n:"Infographie - Les Echos, Datagora ..."},
+        {h:"artisanat.html", i:"artisanat-5.webp", n:"Artisanats chinois"},
+        {h:"aznavour.html", i:"aznavour_cover.webp", n:"Charles Aznavour - Universal Music France"}
+      ];
+      var ici = location.pathname.split('/').pop() || 'index.html';
+      var pool = P.filter(function (p) { return p.h !== ici; });
+
+      // Mélange de Fisher-Yates : chaque tirage est équiprobable,
+      // et retirer les éléments au fur et à mesure exclut les doublons.
+      for (var i = pool.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+      }
+
+      document.getElementById('moreGrid').innerHTML = pool.slice(0, 3).map(function (p) {
+        return '<a class="more-card" href="' + p.h + '">'
+             +   '<div class="more-thumb">'
+             +     '<img src="images/' + p.i + '" alt="" loading="lazy" />'
+             +     '<div class="hover-label"><span>' + p.n + '</span></div>'
+             +   '</div>'
+             + '</a>';
+      }).join('');
+    })();
+  </script>
+
   <script>
     // ── Hamburger ──
     function toggleMobile() {
