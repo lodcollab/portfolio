@@ -538,6 +538,15 @@
                     .getPropertyValue('--nav-h')) || 80;
 
     function onScroll() {
+      // Sous 900px les colonnes sont empilees : aucun sticky, sinon le texte
+      // reste fige par-dessus les medias. On vide le style en ligne pour
+      // rendre la main a la feuille de style.
+      if (window.innerWidth <= 900) {
+        info.style.position = '';
+        info.style.top      = '';
+        return;
+      }
+
       const infoH    = info.offsetHeight;
       const mediasBottom = medias.getBoundingClientRect().bottom;
       const infoBottom   = navH + infoH;
@@ -554,6 +563,8 @@
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
   </script>
 
 </body>
