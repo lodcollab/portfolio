@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Projet — Elodie Hu</title>
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png" />
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -259,6 +259,25 @@
       display: block;
     }
 
+    /* ── TAGS ── */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin-top: -16px;
+      margin-bottom: 32px;
+    }
+
+    .tag {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+    .tag-magenta { color: #F45AD5; }
+    .tag-cyan    { color: #5BC9F2; }
+    .tag-green   { color: #6BF56B; }
+
     /* ══════════════════════════════════════
        SECTION MORE
     ══════════════════════════════════════ */
@@ -394,7 +413,6 @@
       <div class="project-info" id="projectInfo">
 
         <h1 class="project-title">L'aventure impressionniste</h1>
-        <!-- ↑ Remplace par le vrai titre -->
 
         <p class="project-description">
           À l’occasion des 150 ans de la première exposition impressionniste, 
@@ -402,7 +420,11 @@
           l’impressionnisme sous un angle neuf et dynamique. Cette vidéo a servi d’illustrer 
           la conférence de Bénédicte Trémolières, restauratrice de peinture, sur la technique des impressionnistes.
         </p>
-        <!-- ↑ Remplace par la vraie description -->
+
+        <div class="tags">
+          <span class="tag tag-cyan"># motion</span>
+          <span class="tag tag-magenta"># direction artistique</span>
+        </div>
 
       </div>
       <!-- fin .project-info -->
@@ -449,7 +471,7 @@
     // 3 projets tirés au hasard, jamais la page courante, jamais de doublon.
     (function () {
       var P = [
-        {h:"titlesequence.html", i:"titlesequence_cover.webp", n:"Title sequence - Tampopo"},
+        {h:"titlesequence.html", i:"tampopo_cover.webp", n:"Title sequence - Tampopo"},
         {h:"orsay.html", i:"orsay-still-2.webp", n:"L'aventure impressionniste - Mus\u00e9e d'Orsay"},
         {h:"pmu_contenus_digitaux.html", i:"pmuplay_cover.webp", n:"PMUPLAY\u00ae - contenus digitaux"},
         {h:"sdes.html", i:"sdes_cover.webp", n:"4 grands d\u00e9fis pour demain - SDES"},
@@ -532,6 +554,7 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
     onScroll();
+
   </script>
 
 </body>

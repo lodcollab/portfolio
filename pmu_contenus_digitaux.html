@@ -4,16 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Projet — Elodie Hu</title>
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png" />
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --black: #111111;
-      --gray-client: #D9D9D9;
-      --white: #ffffff;
+      /* Fond vert de la page, proche du vert des médias.
+         --black désigne l'encre, --white le fond : les deux sont inversés
+         ici, le reste de la feuille suit. */
+      --black: #FFFFFF;
+      --white: #005049;
+      --gray-client: #8FB0AB;
+      --placeholder: #003E39;
       --font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       --nav-h: 80px;
       --pad: 48px;
@@ -36,7 +40,7 @@
       width: 100%;
       top: 0;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(0, 80, 73, 0.95);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       display: flex;
@@ -188,7 +192,7 @@
       font-size: 13px;
       font-weight: 400;
       line-height: 1.7;
-      color: #444;
+      color: #CBDCD9;
       margin-bottom: 32px;
     }
 
@@ -237,7 +241,7 @@
     .media-block {
       width: 100%;
       aspect-ratio: 16 / 9;
-      background: var(--gray-client);
+      background: var(--placeholder);
       overflow: hidden;
     }
 
@@ -265,6 +269,25 @@
       flex-direction: column;
       gap: 0;
     }
+
+    /* ── TAGS ── */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin-top: -16px;
+      margin-bottom: 32px;
+    }
+
+    .tag {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+    .tag-magenta { color: #F45AD5; }
+    .tag-cyan    { color: #5BC9F2; }
+    .tag-green   { color: #6BF56B; }
 
     /* ══════════════════════════════════════
        SECTION MORE
@@ -304,7 +327,7 @@
     .more-thumb {
       width: 100%;
       aspect-ratio: 16 / 9;
-      background: var(--gray-client);
+      background: var(--placeholder);
       overflow: hidden;
       position: relative;
     }
@@ -401,14 +424,19 @@
       <div class="project-info" id="projectInfo">
 
         <h1 class="project-title">PMUPLAY® - contenus digitaux</h1>
-        <!-- ↑ Remplace par le vrai titre -->
 
         <p class="project-description">
           Contenus digitaux réalisés au sein de l'équipe Brand Design de la direction MED (Marque, Expérience et Design) de PMU, dans le respect de la charte PMUPLAY.
           <br><br>
           Les visuels mêlent génération d'images et de vidéos par IA, After Effects, Figma et Photoshop, déclinés sur l'ensemble des formats réseaux sociaux.
         </p>
-        <!-- ↑ Remplace par la vraie description -->
+
+        <div class="tags">
+          <span class="tag tag-magenta"># IA</span>
+          <span class="tag tag-cyan"># direction artistique</span>
+          <span class="tag tag-green"># motion</span>
+          <span class="tag tag-magenta"># graphisme</span>
+        </div>
 
       </div>
       <!-- fin .project-info -->
@@ -456,7 +484,7 @@
     // 3 projets tirés au hasard, jamais la page courante, jamais de doublon.
     (function () {
       var P = [
-        {h:"titlesequence.html", i:"titlesequence_cover.webp", n:"Title sequence - Tampopo"},
+        {h:"titlesequence.html", i:"tampopo_cover.webp", n:"Title sequence - Tampopo"},
         {h:"orsay.html", i:"orsay-still-2.webp", n:"L'aventure impressionniste - Mus\u00e9e d'Orsay"},
         {h:"pmu_contenus_digitaux.html", i:"pmuplay_cover.webp", n:"PMUPLAY\u00ae - contenus digitaux"},
         {h:"sdes.html", i:"sdes_cover.webp", n:"4 grands d\u00e9fis pour demain - SDES"},
@@ -539,6 +567,7 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
     onScroll();
+
   </script>
 
 </body>
